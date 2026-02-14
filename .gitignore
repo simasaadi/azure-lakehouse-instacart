@@ -218,3 +218,5 @@ data/raw/
 warehouse/*.duckdb
 *.zip
 data/silver_parquet/
+data/gold_parquet/
+
