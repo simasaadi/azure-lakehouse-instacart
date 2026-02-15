@@ -35,3 +35,8 @@ jobs:
           python scripts/02_profile_and_checks.py
           python scripts/03_build_silver.py
           python scripts/04_build_gold.py
+      - name: Upload gold parquet artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: gold_parquet_sample
+          path: data/gold_parquet/*.parquet
