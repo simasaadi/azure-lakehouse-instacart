@@ -221,3 +221,8 @@ data/silver_parquet/
 data/gold_parquet/
 
 tmp/
+
+
+
+
+warehouse/instacart.duckdb
