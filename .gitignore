@@ -223,6 +223,17 @@ data/gold_parquet/
 tmp/
 
 
+# local outputs
+warehouse/
+data/silver_parquet/
+data/gold_parquet/
+tmp/
+
+# terraform state
+infra/azure/terraform/.terraform/
+infra/azure/terraform/.terraform.lock.hcl
+infra/azure/terraform/terraform.tfstate
+infra/azure/terraform/terraform.tfstate.*
 
 
 warehouse/instacart.duckdb

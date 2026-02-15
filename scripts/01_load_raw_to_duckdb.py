@@ -1,9 +1,17 @@
+import os
+
 from pathlib import Path
 import duckdb
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-RAW_DIR = REPO_ROOT / "data" / "raw"
-DB_PATH = REPO_ROOT / "warehouse" / "instacart.duckdb"
+DATA_MODE = os.getenv("DATA_MODE", "raw").lower()
+if DATA_MODE not in {"raw", "sample"}:
+    raise ValueError("DATA_MODE must be 'raw' or 'sample'")
+
+RAW_DIR = REPO_ROOT / "data" / DATA_MODE
+
+DB_PATH = REPO_ROOT / "warehouse" / f"instacart_{DATA_MODE}.duckdb"
+
 
 TABLES = {
     "aisles": "aisles.csv",
