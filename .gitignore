@@ -237,3 +237,12 @@ infra/azure/terraform/terraform.tfstate.*
 
 
 warehouse/instacart.duckdb
+
+
+
+data/raw/
+data/sample/
+data/silver_parquet/
+data/gold_parquet/
+warehouse/
+tmp/
