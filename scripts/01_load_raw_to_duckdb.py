@@ -11,6 +11,7 @@ if DATA_MODE not in {"raw", "sample"}:
 RAW_DIR = REPO_ROOT / "data" / DATA_MODE
 
 DB_PATH = REPO_ROOT / "warehouse" / f"instacart_{DATA_MODE}.duckdb"
+DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 
 
 TABLES = {
