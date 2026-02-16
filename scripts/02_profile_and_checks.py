@@ -116,11 +116,13 @@ def main() -> None:
     check(bad_dow == 0, f"orders.order_dow outside 0-6: {bad_dow}")
 
     # order_hour_of_day expected 0-23
-    bad_hour = scalar(con, "SELECT COUNT(*)
-FROM raw.orders
-WHERE TRY_CAST(order_hour_of_day AS INTEGER) IS NULL
-   OR TRY_CAST(order_hour_of_day AS INTEGER) NOT BETWEEN 0 AND 23
-")
+    bad_hour = scalar(con, """
+    SELECT COUNT(*)
+    FROM raw.orders
+    WHERE TRY_CAST(order_hour_of_day AS INTEGER) IS NULL
+       OR TRY_CAST(order_hour_of_day AS INTEGER) NOT BETWEEN 0 AND 23
+    """)
+
     check(bad_hour == 0, f"orders.order_hour_of_day outside 0-23: {bad_hour}")
 
     # days_since_prior_order should not be negative (NULL allowed)
