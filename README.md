@@ -1,60 +1,52 @@
-\# Azure Lakehouse (Local + Cloud Emulator) — Instacart
+# Azure-style Lakehouse (Instacart) — Local + CI + Cloud Emulator
 
+End-to-end analytics pipeline using Instacart Market Basket Analysis data with a lakehouse-style layout:
 
+- **Bronze/Raw**: CSVs (local only, not committed)
+- **Silver**: cleaned dimensions + facts as Parquet
+- **Gold**: analytics marts as Parquet
+- **CI**: runs on a small deterministic sample
+- **Azure-style cloud path (no subscription required)**: uploads Gold Parquet to **Azurite** (Azure Blob emulator), downloads with Azure SDK, queries with DuckDB
 
-\# Azure Lakehouse (Local + Azure Blob Emulator) — Instacart
+## What this demonstrates
+- Lakehouse concepts: **raw → silver → gold**
+- Reproducible local runs (one-command scripts)
+- CI that validates pipeline + quality checks on a small dataset
+- Azure Blob–compatible workflow using **Azurite** (storage emulator)
 
+---
 
+## Architecture
+See: [`docs/architecture.md`](docs/architecture.md)
 
-This repository implements a lakehouse-style data pipeline for the Instacart dataset with local execution and an Azure Blob–compatible storage emulator for reproducible runs.
+**CI proof**  
+![CI green run](docs/images/ci-green.png)
 
+**Cloud emulator proof**  
+![Cloud emulator output](docs/images/cloud-emulator-output.png)
 
+---
 
-\- \*\*Local mode:\*\* raw CSV → DuckDB warehouse → silver/gold Parquet marts
+## Repo layout
+- `data/raw/` — full Kaggle CSVs (local only, ignored by git)
+- `data/seed/` — tiny commit-friendly seed dataset
+- `data/sample/` — generated sample dataset for CI
+- `data/silver_parquet/` — silver outputs
+- `data/gold_parquet/` — gold marts
+- `warehouse/` — DuckDB databases (local only)
+- `scripts/` — pipeline scripts
+- `infra/azure/terraform/` — Azure IaC placeholder (optional)
+- `run_ci_sample.ps1` — run what CI runs, locally
+- `run_local_raw.ps1` — run full pipeline locally
+- `run_cloud_emulator.ps1` — Azurite upload/download/query demo
 
-\- \*\*Emulated cloud storage:\*\* upload \*\*gold\*\* marts to \*\*Azurite\*\* (Azure Blob emulator) and query them downstream (authenticated)
+---
 
-\- \*\*Azure-ready:\*\* Terraform scaffold included to deploy ADLS Gen2 + container when an Azure subscription is available
+## Quick start (Windows / PowerShell)
 
-
-
-\## Architecture
-
-
-
-\*\*Medallion layers\*\*
-
-\- \*\*Raw:\*\* Kaggle Instacart CSVs (`data/raw/`)
-
-\- \*\*Silver:\*\* cleaned/typed Parquet (`data/silver\_parquet/`) \*(kept local; large)\*
-
-\- \*\*Gold:\*\* curated marts (`data/gold\_parquet/`)
-
-
-
-\*\*Cloud emulator\*\*
-
-\- \*\*Storage:\*\* Azurite Blob container `lakehouse/` with:
-
-&nbsp; - `gold/mart\_customer.parquet`
-
-&nbsp; - `gold/mart\_product.parquet`
-
-&nbsp; - `gold/mart\_demand\_profile.parquet`
-
-\- \*\*Query:\*\* download via Azure SDK (auth) → query in DuckDB
-
-
-
-\## Quickstart (Cloud Emulator Demo)
-
-
-
-\### 1) Start Azurite (separate PowerShell window)
-
+### 1) Create venv + install dependencies
 ```powershell
-
-azurite --skipApiVersionCheck --blobHost 127.0.0.1 --queueHost 127.0.0.1 --tableHost 127.0.0.1 --location C:\\azurite --silent --debug C:\\azurite\\debug.log
-
-
-
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -r requirements.txt
